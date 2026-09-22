@@ -1,0 +1,25 @@
+site_name: sverige Linux
+site_url: https://ollipix.github.io/sverige-docs/
+site_description: Independent, source-built x86_64 operating system documentation.
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: black
+    accent: lime
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - About: about.md
+  - Architecture: architecture.md
+  - Installation Guide: guide.md
+  - Expectations: expectations.md
+  
