@@ -4,6 +4,8 @@ site_description: Independent, source-built x86_64 operating system documentatio
 
 theme:
   name: material
+  logo: assets/images/logo.png
+  favicon: assets/images/logo.png
   palette:
     scheme: slate
     primary: black
@@ -19,7 +21,5 @@ theme:
 nav:
   - Home: index.md
   - About: about.md
-  - Architecture: architecture.md
   - Installation Guide: guide.md
-  - Expectations: expectations.md
   
