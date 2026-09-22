@@ -1,3 +1,5 @@
+
+
 # Sverige Linux
 
 This installation builds a minimal x86_64 sverige Linux system directly from upstream source.
@@ -10,9 +12,9 @@ Use the current x86_64 SystemRescue image.
 
 Create the target:
 
-'''bash
+```bash
 mkdir -p /mnt/sverige
-'''
+```
 
 ## 2. Partition the target
 
@@ -21,40 +23,40 @@ Create a damn GPT partition table on /dev/sda
 
 The default layout is:
 
-'''
+```text
 /dev/sda1    EFI System Partition    512 MiB
 /dev/sda2    Linux filesystem        remaining space
-'''
+```
 
 Optional swap may be added separately. (you hear that? OPTIONAL!)
 
 Format the filesystems:
 
-'''bash
+```bash
 mkfs.fat -F 32 /dev/sda1
 mkfs.ext4 /dev/sda2
-'''
+```
 
 If swap was created:
 
-'''bash
+```bash
 mkswap /dev/sda3
 swapon /dev/sda3
-'''
+```
 
 Mount the target:
 
-'''bash
+```bash
 mount /dev/sda2 /mnt/sverige
 mkdir -p /mnt/sverige/boot
 mount /dev/sda1 /mnt/sverige/boot
-'''
+```
 
 Create the source tree:
 
-'''bash
+```bash
 mkdir -p /mnt/sverige/sources
-'''
+```
 
 ## 3. Source set
 
@@ -78,9 +80,9 @@ https://www.kernel.org/pub/linux/utils/boot/
 
 Keep the original archives in:
 
-'''
+```text
 /mnt/sverige/sources
-'''
+```
 
 Verify upstream signatures or checksums before extraction (trust me you do not want anything corrupted here)
 
@@ -90,26 +92,26 @@ The installation does not depend on a sverige source mirror, bin repo or sverige
 
 Set:
 
-'''bash
+```bash
 export SVERIGE=/mnt/sverige
 export PATH=$SVERIGE/tools/bin:$PATH
-'''
+```
 
 Create the temporary toolchain:
 
-'''bash
+```bash
 mkdir -p "$SVERIGE/tools"
-'''
+```
 
 The temporary build sequence is:
 
-'''
+```text
 Binutils
 -> GCC pass 1
 -> Linux API headers
 -> Glibc
 -> GCC/libgcc
-'''
+```
 
 The compiler supplied by SystemRescue is only the initial bootstrap compiler.
 
@@ -119,9 +121,9 @@ Source archives are extracted into "/mnt/sverige/sources".
 
 For a normal tar archive:
 
-'''bash
+```bash
 tar -xf /sources/<package>.tar.xz
-'''
+```
 
 For other compression formats, use the appropriate tar option or decompression utility.
 
@@ -137,21 +139,21 @@ Extract Binutils and create an out-of-tree build directory.
 
 Configure it for the target architecture:
 
-'''bash
+```bash
 ../configure \
     --prefix="$SVERIGE/tools" \
     --with-sysroot="$SVERIGE" \
     --target=x86_64-sverige-linux-gnu \
     --disable-nls \
     --disable-werror
-'''
+```
 
 Build and install:
 
-'''bash
+```bash
 make -j"$(nproc)"
 make install
-'''
+```
 
 ## 7. GCC pass 1
 
@@ -161,7 +163,7 @@ Populate its bundled prerequisites if required by the selected GCC release.
 
 Configure the bootstrap compiler:
 
-'''bash
+```bash
 ../configure \
     --target=x86_64-sverige-linux-gnu \
     --prefix="$SVERIGE/tools" \
@@ -178,21 +180,21 @@ Configure the bootstrap compiler:
     --disable-libssp \
     --disable-libvtv \
     --disable-libstdcxx-pch
-'''
+```
 
 Build the compiler and target libgcc:
 
-'''bash
+```bash
 make -j"$(nproc)" all-gcc
 make -j"$(nproc)" all-target-libgcc
-'''
+```
 
 Install:
 
-'''bash
+```bash
 make install-gcc
 make install-target-libgcc
-'''
+```
 
 This compiler is only the temporary compiler.
 (This is probably a good time to get up and take a break before coming back in a bit)
@@ -203,23 +205,23 @@ Extract the Linux source.
 
 Clean the source tree:
 
-'''bash
+```bash
 make mrproper
-'''
+```
 
 Install the exported userspace headers:
 
-'''bash
+```bash
 make headers
 find usr/include -type f ! -name '*.install' -delete
-'''
+```
 
 Copy them into the target:
 
-'''bash
+```bash
 mkdir -p "$SVERIGE/usr/include"
 cp -a usr/include/. "$SVERIGE/usr/include/"
-'''
+```
 
 These headers define the Linux userspace API used when building Glibc.
 
@@ -229,7 +231,7 @@ Extract Glibc into a separate build directory.
 
 Configure against the target headers and bootstrap compiler:
 
-'''bash
+```bash
 ../configure \
     --prefix=/usr \
     --host=x86_64-sverige-linux-gnu \
@@ -237,19 +239,19 @@ Configure against the target headers and bootstrap compiler:
     --with-headers="$SVERIGE/usr/include" \
     --enable-kernel=<minimum-supported-kernel> \
     libc_cv_slibdir=/usr/lib
-'''
+```
 
 Build:
 
-'''bash
+```bash
 make -j"$(nproc)"
-'''
+```
 
 Install into the target filesystem:
 
-'''bash
+```bash
 make DESTDIR="$SVERIGE" install
-'''
+```
 
 "DESTDIR" is build-system staging. It is not a configuration the eventual user (you) needs(s) to understand or maintain.
 
@@ -259,24 +261,24 @@ Build the target GCC against the newly installed Glibc.
 
 Use the configuration required by the selected GCC release with:
 
-'''
+```text
 target -> x86_64-sverige-linux-gnu
 prefix -> /usr
 languages -> c,c++
 multilib -> disabled
-'''
+```
 
 Build:
 
-'''bash
+```bash
 make -j"$(nproc)"
-'''
+```
 
 Install:
 
-'''bash
+```bash
 make install
-'''
+```
 
 Install the target libgcc and libstdc++ components required by the selected GCC release.
 
@@ -286,42 +288,42 @@ The target now contains its own compiler and libc.
 
 Create the target filesystem hierarchy:
 
-'''bash
+```bash
 mkdir -p \
     "$SVERIGE"/{boot,dev,etc,home,mnt,opt,proc,root,run,srv,sys,tmp,var} \
     "$SVERIGE"/usr/{bin,lib,sbin,src}
 chmod 1777 "$SVERIGE/tmp"
-'''
+```
 
 Expose the required kernel interfaces:
 
-'''bash
+```bash
 mount --bind /dev "$SVERIGE/dev"
 mount --bind /dev/pts "$SVERIGE/dev/pts"
 mount -t proc proc "$SVERIGE/proc"
 mount -t sysfs sysfs "$SVERIGE/sys"
 mount -t tmpfs tmpfs "$SVERIGE/run"
-'''
+```
 
 Provide resolver configuration for the chroot.
 
 Enter:
 
-'''bash
+```bash
 chroot "$SVERIGE" /usr/bin/env -i \
     HOME=/root \
     TERM="$TERM" \
     PATH=/usr/bin:/usr/sbin:/bin:/sbin \
     /bin/bash --login
-'''
+```
 
 Set:
 
-'''bash
+```bash
 export HOME=/root
 export LC_ALL=C
 export PATH=/usr/bin:/usr/sbin:/bin:/sbin
-'''
+```
 
 ## 12. Base libraries
 
@@ -333,11 +335,11 @@ Use each project's upstream build system.
 
 For conventional Autotools projects:
 
-'''bash
+```bash
 ./configure --prefix=/usr
 make -j"$(nproc)"
 make install
-'''
+```
 
 Use the project's native build procedure when it does not use Autotools.
 
@@ -359,9 +361,9 @@ Install them into "/usr".
 
 Ensure Bash is available as:
 
-'''
+```text
 /bin/bash
-'''
+```
 
 ## 15. Compiler rebuild
 
@@ -377,11 +379,11 @@ The compiler and linker must now use the target Glibc and libraries.
 
 Verify:
 
-'''bash
+```bash
 gcc --version
 g++ --version
 ld --version
-'''
+```
 
 Compile and execute a trivial C program.
 
@@ -405,9 +407,9 @@ useradd,groupadd,passwd,su,login
 
 Set the root password by using passwd
 
-'''bash
+```bash
 passwd
-'''
+```
 
 ## 18. D-Bus
 
@@ -443,31 +445,31 @@ systemd,udev,journald,logind,tmpfiles,sysusers,networkd,resolved
 
 Configure:
 
-'''bash
+```bash
 meson setup build \
     --prefix=/usr \
     --buildtype=release \
     -Dtests=false \
     -Dman=false
-'''
+```
 
 Build:
 
-'''bash
+```bash
 ninja -C build
-'''
+```
 
 Install:
 
-'''bash
+```bash
 ninja -C build install
-'''
+```
 
 Ensure:
 
-'''
+```text
 /sbin/init
-'''
+```
 
 resolves to the installed systemd init.
 
@@ -479,19 +481,19 @@ systemd-udevd,systemd-journald,systemd-logind,systemd-tmpfiles,systemd-sysusers,
 
 Configure networking under:
 
-'''
+```text
 /etc/systemd/network/
-'''
+```
 
 A basic DHCP configuration can be:
 
-'''ini
+```ini
 [Match]
 Name=en*
 
 [Network]
 DHCP=yes
-'''
+```
 
 Wireless networking requires the appropriate wireless userspace and configuration
 
@@ -507,17 +509,17 @@ The installer chooses machine-specific configuration.
 
 Set:
 
-'''
+```text
 /etc/hostname
-'''
+```
 
 to the desired hostname.
 
 Configure:
 
-'''
+```text
 /etc/hosts
-'''
+```
 
 Configure the desired locale.
 
@@ -525,36 +527,36 @@ Configure the desired timezone.
 
 For example:
 
-'''bash
+```bash
 ln -sf /usr/share/zoneinfo/Europe/Stockholm /etc/localtime
-'''
+```
 
 ## 24. Normal user
 
 Create the normal account:
 
-'''bash
+```bash
 useradd -m -s /bin/bash sverige
-'''
+```
 
-'''bash
+```bash
 passwd sverige
-'''
+```
 
 Create the administrative group:
 
-'''bash
+```bash
 groupadd wheel
 usermod -aG wheel sverige
-'''
+```
 
 Add hardware-related groups only where appropriate.
 
 Set ownership:
 
-'''bash
+```bash
 chown -R sverige:sverige /home/sverige
-'''
+```
 
 Install "sudo" or "doas" if administrative access from the normal account is desired.
 
@@ -571,24 +573,24 @@ to whatever you like, I'd recommend making it sverige for when the logo is added
 
 Extract the Linux source under "/usr/src":
 
-'''bash
+```bash
 cd /usr/src
 tar -xf /sources/linux-<version>.tar.xz
 ln -s linux-<version> linux
 cd linux
-'''
+```
 
 Clean:
 
-'''bash
+```bash
 make mrproper
-'''
+```
 
 Configure:
 
-'''bash
+```bash
 make menuconfig
-'''
+```
 
 The configuration must support the target hardware and boot path, including:
 
@@ -598,33 +600,33 @@ Anything required before userspace starts must be built into the kernel or made 
 
 Build:
 
-'''bash
+```bash
 make -j"$(nproc)"
-'''
+```
 
 Install modules:
 
-'''bash
+```bash
 make modules_install
-'''
+```
 
 Install the kernel:
 
-'''bash
+```bash
 cp arch/x86/boot/bzImage /boot/vmlinuz-<version>
-'''
+```
 
 Install its configuration:
 
-'''bash
+```bash
 cp .config /boot/config-<version>
-'''
+```
 
 Install System.map:
 
-'''bash
+```bash
 cp System.map /boot/System.map-<version>
-'''
+```
 
 Generate an initramfs if the selected kernel configuration requires one.
 
@@ -634,9 +636,9 @@ Obtain Linux-firmware from its upstream project.
 
 Install the firmware under:
 
-'''
+```text
 /lib/firmware
-'''
+```
 
 Keep the firmware required by the target hardware.
 
@@ -648,34 +650,34 @@ Extract the current stable GRUB source.
 
 Configure it for UEFI:
 
-'''bash
+```bash
 ./configure \
     --prefix=/usr \
     --sysconfdir=/etc \
     --disable-werror \
     --with-platform=efi \
     --target=x86_64
-'''
+```
 
 Build:
 
-'''bash
+```bash
 make -j"$(nproc)"
-'''
+```
 
 Install:
 
-'''bash
+```bash
 make install
-'''
+```
 
 Install GRUB to the EFI System Partition mounted at "/boot".
 
 Generate the configuration:
 
-'''bash
+```bash
 grub-mkconfig -o /boot/grub/grub.cfg
-'''
+```
 
 Verify that the generated configuration references the installed kernel and correct root filesystem.
 
@@ -683,24 +685,24 @@ Verify that the generated configuration references the installed kernel and corr
 
 Obtain the filesystem UUIDs:
 
-'''bash
+```bash
 blkid
-'''
+```
 
 Configure:
 
-'''
+```text
 /etc/fstab
-'''
+```
 
 with the installed UUIDs.
 
 The resulting structure is:
 
-'''
+```text
 UUID=<root-uuid>    /       ext4    defaults    0 1
 UUID=<efi-uuid>     /boot   vfat    defaults    0 2
-'''
+```
 
 Add swap if one was created.
 
@@ -722,9 +724,9 @@ Compile and execute a test program.
 
 The final target must not require:
 
-'''
+```text
 /mnt/sverige/tools
-'''
+```
 
 or libraries supplied by SystemRescue.
 
@@ -734,29 +736,29 @@ Once this has been verified, the temporary "/tools" tree can be removed.
 
 Verify:
 
-'''bash
+```bash
 which gcc
 which ld
 which bash
 which systemd
-'''
+```
 
 Verify:
 
-'''bash
+```bash
 ls -l /sbin/init
-'''
+```
 
 Verify:
 
-'''bash
+```bash
 gcc --version
 ld --version
-'''
+```
 
 Verify:
 
-'''
+```text
 /etc/fstab
 /etc/hostname
 /etc/hosts
@@ -764,11 +766,11 @@ Verify:
 /etc/passwd
 /etc/group
 /etc/shadow
-'''
+```
 
 Verify:
 
-'''
+```text
 /boot
 /lib/modules
 /lib/firmware
@@ -776,7 +778,7 @@ Verify:
 /usr/bin
 /usr/lib
 /sbin/init
-'''
+```
 
 Compile and execute a C program.
 
@@ -792,29 +794,29 @@ Verify that the bootloader references the installed kernel.
 
 Exit:
 
-'''bash
+```bash
 exit
-'''
+```
 
 Unmount the virtual filesystems:
 
-'''bash
+```bash
 umount -R /mnt/sverige/dev
 umount -R /mnt/sverige/proc
 umount -R /mnt/sverige/sys
 umount -R /mnt/sverige/run
-'''
+```
 
 Unmount "/boot":
 
-'''bash
+```bash
 umount /mnt/sverige/boot
-'''
+```
 
 Unmount the root filesystem:
 
-'''bash
+```bash
 umount /mnt/sverige
-'''
+```
 
 Disable temporary swap if necessary and reboot, (congrats, you have officially downloaded sverige, you can configure more components like desktop environments yourself or wait for the second guide "Suomi" to release, hope you enjoyed installing sverige as I enjoyed making it!)
