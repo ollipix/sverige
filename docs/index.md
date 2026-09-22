@@ -1,23 +1,17 @@
 # sverige Linux
 
-Welcome to the documentation for **sverige Linux**—a minimal, manual, source-built x86_64 Linux assembly guide.
+This site provides documentation for compiling and assembling **sverige Linux**, an independent x86_64 operating system built from upstream source code.
 
 ---
 
-## The Guides
+## Documentation Tracks
 
-### 1. [sverige (Base Guide)](guide.md)
-The core guide detailing how to manually compile standard upstream software (GNU tools, Glibc, Linux kernel, systemd) from source into a standalone, bootable TTY environment.
-
-### 2. Suomi (Extended Stack)
-*(Work in Progress)*
-Planned future documentation covering display servers, audio pipelines, and desktop environments. This book is currently incomplete and under development.
+* **[sverige](guide.md)** — the base tutorial for making the sevrige operating system
+* **Suomi** — *(In Development)* Documentation covering extended components, including audio stacks, display servers, and graphics drivers.
 
 ---
 
-## Quick Links
+## Pages
 
-* [About](about.md)
-* [Software List](packages.md)
-* [User Expectations](expectations.md)
-  
+* **[About](about.md)**
+* **[Install guide](guide.md)**
