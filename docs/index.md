@@ -1,6 +1,6 @@
-# sverige Linux
+# Sverige Linux
 
-This site provides documentation for compiling and assembling **sverige Linux**, an independent x86_64 operating system built from upstream source code.
+Welcome to Sverige Linux! this website provides documentation for compiling and assembling **sverige Linux**, an independent x86_64 operating system built from upstream source code.
 
 ---
 
