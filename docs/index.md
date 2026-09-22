@@ -6,7 +6,7 @@ Welcome to Sverige Linux! this website provides documentation for compiling and 
 
 ## Documentation Tracks
 
-* **[sverige](guide.md)** — the base tutorial for making the sevrige operating system
+* **[sverige](guide.md)** — the base tutorial for making the sevrige operating system, click here to get started
 * **Suomi** — *(In Development)* Documentation covering extended components, including audio stacks, display servers, and graphics drivers.
 
 ---
