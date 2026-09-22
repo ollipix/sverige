@@ -4,8 +4,8 @@ site_description: Independent, source-built x86_64 operating system documentatio
 
 theme:
   name: material
-  logo: /docs/assets/images/Logo.png
-  favicon: /docs/assets/images/Logo.png
+  logo: assets/images/Logo.png
+  favicon: assets/images/Logo.png
   palette:
     scheme: slate
     primary: black
