@@ -16,8 +16,9 @@ sverige is designed to provide full transparency into modern Linux assembly. By 
 
 ## Documentation Tracks
 
-The documentation is split into 3:
+The documentation is split into 2 parts:
 
 | :--- | :--- | :--- |
-| **[sverige Base Guide](guide.md)** | Complete 32-step build guide covering toolchain isolation, Glibc, GNU userspace, `systemd`, kernel, and GRUB bootloader. | **Complete** |
+| **[sverige Base Guide](guide.md)** | Complete 32-step build guide covering toolchain isolation, Glibc, GNU userspace, `systemd`, kernel, and GRUB bootloader. | **Complete** 
+|
 | **Suomi (Extended)** | Extended userspace components: Display servers (Wayland/X11), graphics drivers (Mesa/NVIDIA), pipewire audio, desktop environments, and multimedia stacks. | *In Development* |
