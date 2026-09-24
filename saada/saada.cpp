@@ -9,8 +9,10 @@
 
 struct PackageMeta {
     std::string url;
-    std::string expected_sha256; 
+    std::string expected_sha256;
 };
+
+const std::string SOURCE_DIR = "/mnt/sverige/sources";
 
 const std::map<std::string, PackageMeta> manifest = {
     {"Acl", {"https://download.savannah.gnu.org/releases/acl/acl-2.3.2.tar.gz", ""}},
@@ -74,6 +76,7 @@ void printHelp() {
 void printList() {
     std::cout << "Available packages:\n"
               << "  Linux (Dynamically fetched latest stable)\n";
+
     for (const auto& pair : manifest) {
         std::cout << "  " << pair.first << "\n";
     }
@@ -82,71 +85,152 @@ void printList() {
 std::string execCommand(const char* cmd) {
     std::array<char, 128> buffer;
     std::string result;
-    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
-    
+
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(
+        popen(cmd, "r"),
+        pclose
+    );
+
     if (!pipe) {
-        std::cerr << "[saada] Error: popen() failed to execute command: " << cmd << std::endl;
+        std::cerr << "[saada] Error: popen() failed to execute command: "
+                  << cmd << std::endl;
         return "";
     }
-    
+
     while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
         result += buffer.data();
     }
+
     return result;
 }
 
-int downloadLatestLinuxKernel() {
-    std::cout << "[saada] Querying kernel.org for the latest stable Linux kernel..." << std::endl;
-    
-    std::string banner = execCommand("curl -sSf https://www.kernel.org/finger_banner");
-    if (banner.empty()) {
-        std::cerr << "[saada] Fatal: Could not connect to kernel.org or retrieve banner." << std::endl;
+bool ensureSourceDirectory() {
+    std::string command = "mkdir -p \"" + SOURCE_DIR + "\"";
+
+    int res = std::system(command.c_str());
+
+    if (res == -1) {
+        std::cerr << "[saada] Fatal: system() failed while creating source directory."
+                  << std::endl;
+        return false;
+    }
+
+    if (!WIFEXITED(res) || WEXITSTATUS(res) != 0) {
+        std::cerr << "[saada] Fatal: Could not create "
+                  << SOURCE_DIR << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+std::string getFilenameFromUrl(const std::string& url) {
+    size_t pos = url.find_last_of('/');
+
+    if (pos == std::string::npos || pos + 1 >= url.length()) {
+        return "";
+    }
+
+    return url.substr(pos + 1);
+}
+
+int downloadFile(const std::string& url, const std::string& filename) {
+    if (!ensureSourceDirectory()) {
         return 1;
     }
 
-    std::string token = "The latest stable version of the Linux kernel is:";
-    size_t pos = banner.find(token);
-    
-    if (pos == std::string::npos) {
-        std::cerr << "[saada] Fatal: Unexpected response format from kernel.org." << std::endl;
+    std::string outputPath = SOURCE_DIR + "/" + filename;
+
+    std::cout << "[saada] Downloading " << url << "..." << std::endl;
+    std::cout << "[saada] Destination: " << outputPath << std::endl;
+
+    std::string downloadCmd =
+        "curl -fL -o \"" + outputPath + "\" \"" + url + "\"";
+
+    int res = std::system(downloadCmd.c_str());
+
+    if (res == -1) {
+        std::cerr << "[saada] Fatal: system() call failed to execute shell."
+                  << std::endl;
         return 1;
     }
-    
+
+    if (WIFEXITED(res) && WEXITSTATUS(res) == 0) {
+        std::cout << "[saada] Downloaded " << filename
+                  << " successfully." << std::endl;
+        return 0;
+    }
+
+    int exitCode = WIFEXITED(res) ? WEXITSTATUS(res) : -1;
+
+    std::cerr << "[saada] Fatal: Download failed "
+              << "(curl exit code or abnormal termination: "
+              << exitCode << ")" << std::endl;
+
+    return 1;
+}
+
+int downloadLatestLinuxKernel() {
+    std::cout
+        << "[saada] Querying kernel.org for the latest stable Linux kernel..."
+        << std::endl;
+
+    std::string banner =
+        execCommand("curl -sSf https://www.kernel.org/finger_banner");
+
+    if (banner.empty()) {
+        std::cerr
+            << "[saada] Fatal: Could not connect to kernel.org or retrieve banner."
+            << std::endl;
+        return 1;
+    }
+
+    std::string token =
+        "The latest stable version of the Linux kernel is:";
+
+    size_t pos = banner.find(token);
+
+    if (pos == std::string::npos) {
+        std::cerr
+            << "[saada] Fatal: Unexpected response format from kernel.org."
+            << std::endl;
+        return 1;
+    }
+
     std::string version = banner.substr(pos + token.length());
+
     size_t start = version.find_first_not_of(" \t\n\r");
     size_t end = version.find_last_not_of(" \t\n\r");
+
     if (start != std::string::npos) {
-        version = version.substr(start, (end - start + 1));
+        version = version.substr(start, end - start + 1);
     }
 
-    // Safety check
     size_t dotPos = version.find('.');
+
     if (dotPos == std::string::npos) {
-        std::cerr << "[saada] Fatal: Failed to parse major version from '" << version << "'." << std::endl;
+        std::cerr
+            << "[saada] Fatal: Failed to parse major version from '"
+            << version << "'." << std::endl;
         return 1;
     }
 
     std::string majorVersion = version.substr(0, dotPos);
-    std::string url = "https://cdn.kernel.org/pub/linux/kernel/v" + majorVersion + ".x/linux-" + version + ".tar.xz";
 
-    std::cout << "[saada] Found latest version: " << version << "\n"
-              << "[saada] Downloading " << url << "..." << std::endl;
+    std::string url =
+        "https://cdn.kernel.org/pub/linux/kernel/v" +
+        majorVersion +
+        ".x/linux-" +
+        version +
+        ".tar.xz";
 
-    std::string downloadCmd = "curl -fLO " + url;
-    int res = std::system(downloadCmd.c_str());
-    
-    // Wait check here dude
-    if (res == -1) {
-        std::cerr << "[saada] Fatal: system() call failed to execute shell." << std::endl;
-        return 1;
-    } else if (WIFEXITED(res) && WEXITSTATUS(res) == 0) {
-        std::cout << "[saada] Successfully downloaded linux-" << version << ".tar.xz" << std::endl;
-        return 0;
-    } else {
-        int exitCode = WIFEXITED(res) ? WEXITSTATUS(res) : -1;
-        std::cerr << "[saada] Fatal: Download failed (curl exit code or abnormal termination: " << exitCode << ")" << std::endl;
-        return 1;
-    }
+    std::cout
+        << "[saada] Found latest version: "
+        << version << "\n";
+
+    std::string filename = "linux-" + version + ".tar.xz";
+
+    return downloadFile(url, filename);
 }
 
 int main(int argc, char* argv[]) {
@@ -160,18 +244,26 @@ int main(int argc, char* argv[]) {
     if (cmd == "--help" || cmd == "-h") {
         printHelp();
         return 0;
-    } else if (cmd == "--version" || cmd == "-v") {
-        std::cout << "saada v0.3" << std::endl;
+    }
+
+    if (cmd == "--version" || cmd == "-v") {
+        std::cout << "saada v0.4" << std::endl;
         return 0;
-    } else if (cmd == "list") {
+    }
+
+    if (cmd == "list") {
         printList();
         return 0;
-    } else if (cmd == "install") {
+    }
+
+    if (cmd == "install") {
         if (argc < 3) {
-            std::cerr << "[saada] Error: 'install' requires a package name." << std::endl;
+            std::cerr
+                << "[saada] Error: 'install' requires a package name."
+                << std::endl;
             return 1;
         }
-        
+
         std::string pkg = argv[2];
 
         if (pkg == "Linux") {
@@ -179,35 +271,43 @@ int main(int argc, char* argv[]) {
         }
 
         auto it = manifest.find(pkg);
+
         if (it != manifest.end()) {
-            std::cout << "[saada] Downloading " << pkg << " from " << it->second.url << "..." << std::endl;
-            
-            std::string dlCmd = "curl -fLO " + it->second.url;
-            int res = std::system(dlCmd.c_str());
-            
-            if (res == -1) {
-                std::cerr << "[saada] Fatal: system() call failed to execute shell." << std::endl;
+            std::string filename = getFilenameFromUrl(it->second.url);
+
+            if (filename.empty()) {
+                std::cerr
+                    << "[saada] Fatal: Could not determine filename from URL."
+                    << std::endl;
                 return 1;
-            } else if (WIFEXITED(res) && WEXITSTATUS(res) == 0) {
-                std::cout << "[saada] Downloaded " << pkg << " successfully." << std::endl;
-                
-                if (!it->second.expected_sha256.empty()) {
-                    std::cout << "[saada] Notice: Checksum validation not yet implemented." << std::endl;
-                }
-                return 0;
-            } else {
-                int exitCode = WIFEXITED(res) ? WEXITSTATUS(res) : -1;
-                std::cerr << "[saada] Fatal: Failed to download " << pkg << " (curl exit code: " << exitCode << ")" << std::endl;
-                return 1; 
             }
-        } else {
-            std::cerr << "[saada] Fatal: Package '" << pkg << "' not recognized in in repos, you made a spelling mistake probably!" << std::endl;
-            return 1; 
+
+            int result = downloadFile(it->second.url, filename);
+
+            if (result == 0 && !it->second.expected_sha256.empty()) {
+                std::cout
+                    << "[saada] Notice: Checksum validation not yet implemented."
+                    << std::endl;
+            }
+
+            return result;
         }
-    } else {
-        std::cerr << "[saada] Error: Unknown command '" << cmd << "'\n";
-        printHelp();
+
+        std::cerr
+            << "[saada] Fatal: Package '"
+            << pkg
+            << "' not recognized in repos, you made a spelling mistake probably!"
+            << std::endl;
+
         return 1;
     }
-}
 
+    std::cerr
+        << "[saada] Error: Unknown command '"
+        << cmd
+        << "'\n";
+
+    printHelp();
+
+    return 1;
+}
