@@ -1,10 +1,9 @@
 site_name: sverige Linux
 site_url: https://ollipix.github.io/sverige-docs/
-site_description: Independent, source-built x86_64 operating system documentation.
+site_description: Independent, source-built x86_64 Linux system.
 
 theme:
   name: material
-
   logo: assets/images/Logo.png
   favicon: assets/images/Logo.png
 
@@ -37,9 +36,6 @@ theme:
     - navigation.top
     - navigation.tracking
     - navigation.footer
-    - navigation.instant
-    - navigation.instant.progress
-    - navigation.indexes
     - search.suggest
     - search.highlight
     - search.share
@@ -55,24 +51,31 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
       pygments_lang_class: true
+
   - pymdownx.tasklist:
       custom_checkbox: true
+
   - pymdownx.tabbed:
       alternate_style: true
+
   - attr_list
 
 extra_css:
   - stylesheets/extra.css
 
+extra_javascript:
+  - javascripts/extra.js
+
 extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/ollipix/sverige
-      name: Sverige Linux on GitHub
+      name: sverige Linux on GitHub
 
 nav:
   - Home: index.md
