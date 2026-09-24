@@ -1,0 +1,78 @@
+:root {
+    --sverige-radius: 6px;
+}
+
+/* Homepage banner */
+
+.sverige-banner {
+    width: 100%;
+    margin: 0 0 2.5rem 0;
+    overflow: hidden;
+    border-radius: var(--sverige-radius);
+}
+
+.sverige-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* Typography */
+
+.md-typeset h1 {
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+.md-typeset h2 {
+    font-weight: 650;
+    letter-spacing: -0.015em;
+}
+
+/* Links */
+
+.md-typeset a {
+    transition: opacity 0.15s ease;
+}
+
+.md-typeset a:hover {
+    opacity: 0.8;
+}
+
+/* Code */
+
+.md-typeset pre {
+    border-radius: var(--sverige-radius);
+}
+
+/* Tables */
+
+.md-typeset table:not([class]) {
+    border-radius: var(--sverige-radius);
+    overflow: hidden;
+}
+
+/* Admonitions */
+
+.md-typeset .admonition,
+.md-typeset details {
+    border-radius: var(--sverige-radius);
+}
+
+/* Buttons */
+
+.md-button {
+    border-radius: var(--sverige-radius);
+}
+
+/* Navigation */
+
+.md-nav__link {
+    transition: color 0.15s ease;
+}
+
+/* Footer */
+
+.md-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
