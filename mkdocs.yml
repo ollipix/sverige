@@ -51,18 +51,14 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
-
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
       pygments_lang_class: true
-
   - pymdownx.tasklist:
       custom_checkbox: true
-
   - pymdownx.tabbed:
       alternate_style: true
-
   - attr_list
 
 extra_css:
