@@ -2,22 +2,49 @@
     --sverige-radius: 6px;
 }
 
-/* Homepage banner */
 
-.sverige-banner {
+.sverige-parallax {
+    position: fixed;
+    z-index: -10;
+
+    top: -12.5vh;
+    left: 0;
+
     width: 100%;
-    margin: 0 0 2.5rem 0;
-    overflow: hidden;
-    border-radius: var(--sverige-radius);
+    height: 125vh;
+
+    background-image:
+        linear-gradient(
+            rgba(0, 0, 0, 0.48)
+            rgba(0, 0, 0, 0.68)
+        ),
+        url("../assets/images/GuideBackground.jpg");
+
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    pointer-events: none;
+
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
 }
 
-.sverige-banner img {
-    display: block;
-    width: 100%;
-    height: auto;
+
+.md-container {
+    position: relative;
+    z-index: 1;
 }
 
-/* Typography */
+.md-main {
+    position: relative;
+    z-index: 1;
+}
+
+.md-content__inner {
+    position: relative;
+}
+
 
 .md-typeset h1 {
     font-weight: 700;
@@ -29,8 +56,6 @@
     letter-spacing: -0.015em;
 }
 
-/* Links */
-
 .md-typeset a {
     transition: opacity 0.15s ease;
 }
@@ -39,40 +64,66 @@
     opacity: 0.8;
 }
 
-/* Code */
-
 .md-typeset pre {
     border-radius: var(--sverige-radius);
 }
-
-/* Tables */
 
 .md-typeset table:not([class]) {
     border-radius: var(--sverige-radius);
     overflow: hidden;
 }
 
-/* Admonitions */
-
 .md-typeset .admonition,
 .md-typeset details {
     border-radius: var(--sverige-radius);
 }
 
-/* Buttons */
-
 .md-button {
     border-radius: var(--sverige-radius);
 }
-
-/* Navigation */
 
 .md-nav__link {
     transition: color 0.15s ease;
 }
 
-/* Footer */
-
 .md-footer {
     border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+
+[data-md-color-scheme="slate"] .md-main {
+    background: transparent;
+}
+
+[data-md-color-scheme="slate"] .md-content {
+    background: transparent;
+}
+
+
+[data-md-color-scheme="default"] .sverige-parallax {
+    background-image:
+        linear-gradient(
+            rgba(255, 255, 255, 0.60),
+            rgba(255, 255, 255, 0.72)
+        ),
+        url("../assets/images/GuideBackground.jpg");
+}
+
+@media screen and (max-width: 768px) {
+    .sverige-parallax {
+        top: -8vh;
+        height: 116vh;
+    }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+    .sverige-parallax {
+        transform: none !important;
+    }
+
+    .md-typeset a,
+    .md-nav__link {
+        transition: none;
+    }
 }
