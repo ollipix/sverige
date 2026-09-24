@@ -4,8 +4,16 @@ site_description: Independent, source-built x86_64 operating system documentatio
 
 theme:
   name: material
+
   logo: assets/images/Logo.png
   favicon: assets/images/Logo.png
+
+  font:
+    text: Inter
+    code: JetBrains Mono
+
+  language: en
+
   palette:
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
@@ -14,6 +22,7 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: black
@@ -21,26 +30,51 @@ theme:
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
+
   features:
     - navigation.tabs
     - navigation.sections
     - navigation.top
+    - navigation.tracking
+    - navigation.footer
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.indexes
     - search.suggest
     - search.highlight
+    - search.share
     - content.code.copy
     - content.code.annotate
+    - content.tabs.link
+    - toc.follow
+
+  icon:
+    repo: fontawesome/brands/github
 
 markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
-  - pymdownx.highlight
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
   - pymdownx.tasklist:
       custom_checkbox: true
+  - pymdownx.tabbed:
+      alternate_style: true
   - attr_list
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ollipix/sverige
+      name: Sverige Linux on GitHub
 
 nav:
   - Home: index.md
   - About: about.md
   - Installation Guide: guide.md
-  
