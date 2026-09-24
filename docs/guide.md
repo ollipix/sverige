@@ -1,5 +1,3 @@
-
-
 # Sverige Linux
 
 This installation builds a minimal x86_64 sverige Linux system directly from upstream source.
@@ -700,8 +698,8 @@ with the installed UUIDs.
 The resulting structure is:
 
 ```text
-UUID=<root-uuid>    /       ext4    defaults    0 1
-UUID=<efi-uuid>     /boot   vfat    defaults    0 2
+UUID=<root-uuid>    /        ext4    defaults    0 1
+UUID=<efi-uuid>     /boot    vfat    defaults    0 2
 ```
 
 Add swap if one was created.
