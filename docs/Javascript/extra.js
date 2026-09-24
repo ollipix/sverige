@@ -4,15 +4,23 @@
     let layer = null;
     let ticking = false;
 
-    function findLayer() {
-        layer = document.querySelector(".sverige-parallax");
+    function createParallaxLayer() {
+        if (document.querySelector(".sverige-parallax")) {
+            return;
+        }
+
+        layer = document.createElement("div");
+        layer.className = "sverige-parallax";
+        layer.setAttribute("aria-hidden", "true");
+
+        document.body.prepend(layer);
     }
 
     function updateParallax() {
         ticking = false;
 
-        if (!layer) {
-            findLayer();
+        if (!layer || !document.body.contains(layer)) {
+            createParallaxLayer();
         }
 
         if (!layer) {
@@ -29,7 +37,6 @@
         }
 
         const scrollY = window.scrollY;
-
         const offset = -(scrollY * PARALLAX_SPEED);
 
         layer.style.transform =
@@ -44,7 +51,7 @@
     }
 
     function initParallax() {
-        findLayer();
+        createParallaxLayer();
         updateParallax();
     }
 
