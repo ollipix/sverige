@@ -68,12 +68,3 @@ Create the source tree:
 ```bash
 mkdir -p /mnt/sverige/sources
 ```
-
-add:
-
-```html
-<div class="sverige-continue-container">
-  <button class="sverige-continue" id="sverige-init-choice">
-    CONTINUE
-  </button>
-</div>
