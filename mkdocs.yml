@@ -60,13 +60,7 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
   - attr_list
-
-extra_css:
-  - stylesheets/extra.css
-
-extra_javascript:
-  - javascripts/extra.js
-
+  
 extra:
   social:
     - icon: fontawesome/brands/github
