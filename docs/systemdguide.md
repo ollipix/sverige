@@ -1,4 +1,4 @@
-# Sverige Linux — systemd
+# systemd
 
 ## 4. Source set
 
@@ -9,16 +9,6 @@ The source set consists of:
 Linux API headers, GNU Binutils, GCC, Glibc, GMP, MPFR, MPC, GNU Make, GNU Patch, GNU M4, GNU Bison, GNU Flex, Bc, Perl, Python, Zlib, Bzip2, XZ, GNU Tar, GNU Gzip, GNU Bash, GNU Sed, GNU Gawk, GNU Grep, GNU Diffutils, GNU Findutils, File, GNU Coreutils, Util-linux, Readline, Ncurses, Procps-ng, Psmisc, Kmod, E2fsprogs, Attr, Acl, Libcap, Shadow, Linux-PAM, IPRoute2, IPUtils, D-Bus, systemd, Linux-firmware, Linux kernel, GRUB.
 
 Download each required source archive by Saada. Saada obtains the archives from their upstream projects. (yes I'm giving you links for some of them, be thankful ok?)
-
-The upstream locations used by Saada include:
-
-https://www.kernel.org/
-https://ftp.gnu.org/gnu/
-https://sourceware.org/
-https://systemd.io/
-https://www.freedesktop.org/
-https://www.kernel.org/pub/linux/utils/
-https://www.kernel.org/pub/linux/utils/boot/
 
 Keep the original archives in:
 
