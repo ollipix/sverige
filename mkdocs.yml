@@ -67,6 +67,12 @@ extra:
       link: https://github.com/ollipix/sverige
       name: sverige Linux on GitHub
 
+      extra_css:
+  - stylesheets/init-choice.css
+
+extra_javascript:
+  - javascripts/init-choice.js
+
 nav:
   - Home: index.md
   - About: about.md
