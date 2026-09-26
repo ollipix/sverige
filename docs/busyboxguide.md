@@ -1,3 +1,3 @@
-# Sverige Linux — musl + BusyBox
+# musl + BusyBox
 
 This guide is not available yet.
