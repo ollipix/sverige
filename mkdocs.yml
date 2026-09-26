@@ -61,6 +61,9 @@ markdown_extensions:
       alternate_style: true
   - attr_list
 
+extra_css:
+  - stylesheets/choice.css
+
 extra:
   social:
     - icon: fontawesome/brands/github
