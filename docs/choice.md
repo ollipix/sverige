@@ -3,12 +3,12 @@
 <div class="sverige-choice">
 
 <a href="../systemdguide/">
-  <img src="../assets/images/Systemd.png" alt="systemd">
+  <img src="../assets/images/Systemd.jpg" alt="systemd">
   <strong>systemd</strong>
 </a>
 
 <a href="../busyboxguide/">
-  <img src="../assets/images/Musl.png" alt="musl + BusyBox">
+  <img src="../assets/images/Musl.jpg" alt="musl + BusyBox">
   <strong>musl + BusyBox</strong>
 </a>
 
