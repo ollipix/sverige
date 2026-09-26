@@ -9,6 +9,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const overlay = document.createElement("div");
   overlay.id = "sverige-init-overlay";
 
+  const systemdLogo = new URL(
+    "assets/images/Systemd.png",
+    document.baseURI
+  ).href;
+
+  const muslLogo = new URL(
+    "assets/images/Musl.png",
+    document.baseURI
+  ).href;
+
   overlay.innerHTML = `
     <div class="sverige-init-content">
 
@@ -24,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
           type="button"
         >
           <img
-            src="assets/images/Systemd.png"
+            src="${systemdLogo}"
             alt="systemd"
           >
 
@@ -39,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
           type="button"
         >
           <img
-            src="assets/images/Musl.png"
+            src="${muslLogo}"
             alt="musl + BusyBox"
           >
 
