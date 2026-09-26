@@ -1,0 +1,73 @@
+.sverige-choice-page {
+  min-height: calc(100vh - 120px);
+
+  margin: -1.5rem -0.8rem -2rem;
+  padding: 80px 40px;
+
+  background:
+    linear-gradient(
+      rgba(0, 0, 0, 0.45),
+      rgba(0, 0, 0, 0.45)
+    ),
+    url("../assets/images/Init.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  color: white;
+  text-align: center;
+}
+
+.sverige-choice-page h1 {
+  color: white;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  margin-bottom: 70px;
+}
+
+.sverige-choice {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 100px;
+}
+
+.sverige-choice a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  color: white;
+  text-decoration: none;
+
+  transition: transform 150ms ease;
+}
+
+.sverige-choice a:hover {
+  transform: scale(1.08);
+}
+
+.sverige-choice img {
+  width: 180px;
+  height: 180px;
+
+  object-fit: contain;
+  margin-bottom: 25px;
+}
+
+.sverige-choice strong {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+@media (max-width: 700px) {
+  .sverige-choice {
+    flex-direction: column;
+    gap: 50px;
+  }
+
+  .sverige-choice img {
+    width: 120px;
+    height: 120px;
+  }
+}
