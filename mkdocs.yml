@@ -60,18 +60,18 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
   - attr_list
-  
+
+extra_css:
+  - stylesheets/init-choice.css
+
+extra_javascript:
+  - javascripts/init-choice.js
+
 extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/ollipix/sverige
       name: sverige Linux on GitHub
-
-      extra_css:
-  - stylesheets/init-choice.css
-
-extra_javascript:
-  - javascripts/init-choice.js
 
 nav:
   - Home: index.md
