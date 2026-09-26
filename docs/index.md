@@ -10,46 +10,19 @@ The project focuses on building the system directly from the software it uses ra
 
 ## What is sverige?
 
-The base system is built from upstream projects including GNU, the Linux kernel, systemd, and other components of the Linux userspace.
-
-The build process is documented so that the system can be built from a clean x86_64 environment without relying on a pre-built sverige base image or binary package repository.
+The base system is built from upstream projects including GNU, the Linux kernel, systemd, Musl, BusyBox and other components.
 
 ### Source-based
 
-Software is obtained from its upstream source archives and built during the installation process.
+Software is obtained from its upstream source archives and built during the installation process via the saada package manager.
 
 ### x86_64
 
 The current build is designed for x86_64 systems.
 
-### systemd
+### init
 
-The base system uses systemd for initialization and system management.
-
-### Documented
-
-The build process, from the initial toolchain through the kernel and bootloader, is documented in the Base Guide.
-
----
-
-## Documentation
-
-### sverige Base Guide
-
-The main installation guide.
-
-It covers the base system, including:
-
-- Build environment
-- Toolchain bootstrap
-- Glibc
-- GCC and Binutils
-- GNU userspace
-- systemd
-- Linux
-- Linux firmware
-- GRUB
-- Final system configuration
+The base system uses systemd and an upcoming Musl/BusyBox documentation.
 
 [Read the Base Guide →](guide.md)
 
@@ -73,6 +46,5 @@ It will cover areas such as:
 
 ## Source
 
-The complete project is available on GitHub.
-
+The project is available on GitHub
 [View the sverige Linux repository →](https://github.com/ollipix/sverige)
